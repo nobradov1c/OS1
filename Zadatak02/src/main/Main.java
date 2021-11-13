@@ -68,7 +68,9 @@ class Diler extends Thread {
 		for (Igrac i : igraci) {
 //			System.out.println("Proveravam igraca " + i.getName());
 			if (i.getKarta() == null) {
+
 				i.setKarta(s.uzmi());
+				i.setFlag(true);
 //				System.out.println("Dajem kartu igracu " + i.getName());
 			}
 		}
@@ -79,6 +81,7 @@ class Diler extends Thread {
 class Igrac extends Thread {
 	String ime;
 	Karta karta = null;
+	volatile boolean flag = false;
 
 	public Igrac(String ime) {
 		super();
@@ -93,10 +96,14 @@ class Igrac extends Thread {
 		this.karta = karta;
 	}
 
+	public void setFlag(boolean f) {
+		this.flag = f;
+	}
+
 	@Override
 	public void run() {
 		System.out.println("Igrac " + ime + " ceka kartu...");
-		while (this.karta == null) {
+		while (flag == false) {
 			// Igrac ceka kartu...
 		}
 		System.out.println("Igrac " + ime + " je dobio " + karta);
